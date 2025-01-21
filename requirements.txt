@@ -7,3 +7,5 @@ compas_ifc
 compas_model
 compas_viewer
 compas_notebook
+git+https://github.com/BRG-research/compas_grid.git
+git+https://github.com/BlockResearchGroup/compas-Masonry.git

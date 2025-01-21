@@ -5,8 +5,10 @@ dependencies:
   - python
   - pip
   - compas >=2.8.1
+  - compas_cgal
   - compas_occ
   - ipopt ==3.14.9
   - pyomo ==6.4.2
+  - scip ==9.1
   - pip:
       - -r requirements.txt

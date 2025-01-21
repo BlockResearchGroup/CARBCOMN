@@ -86,6 +86,8 @@ On Mac, type:
 
     conda env create -f env_notwin.yml
 
+This could take a few minutes!
+
 ### Verify installation
 
 Activate the environment in the command prompt:

@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "cement": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["Portland", "Blended", "Rapid Hardening", "Sulphate Resisting"]
+          },
+          "amount_kg_per_m3": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["type", "amount_kg_per_m3"]
+      },
+      "aggregates": {
+        "type": "object",
+        "properties": {
+          "fine_aggregate_kg_per_m3": {
+            "type": "number",
+            "minimum": 0
+          },
+          "coarse_aggregate_kg_per_m3": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["fine_aggregate_kg_per_m3", "coarse_aggregate_kg_per_m3"]
+      },
+      "water": {
+        "type": "object",
+        "properties": {
+          "amount_liters_per_m3": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["amount_liters_per_m3"]
+      },
+      "additives": {
+        "type": "object",
+        "properties": {
+          "plasticizer_liters_per_m3": {
+            "type": "number",
+            "minimum": 0
+          },
+          "air_entrainer_liters_per_m3": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["plasticizer_liters_per_m3", "air_entrainer_liters_per_m3"]
+      },
+      "mixing_instructions": {
+        "type": "object",
+        "properties": {
+          "mix_order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "mix_duration_minutes": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["mix_order", "mix_duration_minutes"]
+      }
+    },
+    "required": ["cement", "aggregates", "water", "additives", "mixing_instructions"]
+  }
+  

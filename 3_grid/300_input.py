@@ -41,7 +41,7 @@ mesh = Mesh.from_vertices_and_faces(points[4:], [[0, 1, 2, 3]])
 
 model_input = {"lines": lines, "meshes": [mesh]}
 
-compas.json_dump(model_input, Path(__file__).parent / "data/frame.json")
+compas.json_dump(model_input, Path(__file__).parent.parent / "data" / "frame.json")
 
 # =============================================================================
 # Visualize

@@ -1,5 +1,8 @@
 from compas_ifc.model import Model as IFCModel
 from compas.geometry import Box
+import os
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Create an empty IFC model using template
 ifc_model = IFCModel.template()
@@ -14,5 +17,5 @@ ifc_model.create(cls="IfcSlab", parent=ifc_model.building_storeys[0], geometry=g
 ifc_model.show()
 
 # Save the IFC model to file
-ifc_model.save("simple_slab.ifc")
+ifc_model.save(os.path.join(HERE, "simple_slab.ifc"))
 

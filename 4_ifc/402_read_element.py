@@ -1,7 +1,10 @@
 from compas_ifc.model import Model
+import os
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 # Loading an IFC file and print summary
-model = Model("Duplex_A_20110907.ifc")
+model = Model(os.path.join(HERE, "Duplex_A_20110907.ifc"))
 
 # Find individual elements
 slabs = model.get_entities_by_type("IfcSlab")

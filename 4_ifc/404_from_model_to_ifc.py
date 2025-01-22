@@ -1,7 +1,10 @@
 from compas_model.models import Model
 from compas_ifc.model import Model as IFCModel
+import os
 
-model: Model = Model.from_json("barrel_vault_frame.json")
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+model: Model = Model.from_json(os.path.join(HERE, "barrel_vault_frame.json"))
 
 # Create an empty IFC model using template
 ifc_model = IFCModel.template()
@@ -28,4 +31,4 @@ for element in model.elements():
 ifc_model.show()
 
 # Save the IFC model to file
-ifc_model.save("barrel_vault_frame.ifc")
+ifc_model.save(os.path.join(HERE, "barrel_vault_frame.ifc"))

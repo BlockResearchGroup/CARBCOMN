@@ -2,6 +2,7 @@ compas_assembly >=0.7.0
 compas_cra
 compas_dr
 compas_fd
+compas_gmsh
 compas_tna
 compas_ifc
 compas_model

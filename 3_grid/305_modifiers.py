@@ -1,7 +1,13 @@
 from pathlib import Path
 
 import compas
+from compas.datastructures import Mesh
 from compas.geometry import Brep
+from compas.geometry import Frame
+from compas.geometry import Polygon
+from compas.geometry import Transformation
+from compas.geometry import Translation
+from compas.geometry import distance_point_point
 from compas.tolerance import TOL
 from compas_grid.elements import BeamTProfileElement
 from compas_grid.elements import BlockElement
@@ -17,44 +23,50 @@ from compas_viewer.config import Config
 model: Model = compas.json_load(Path(__file__).parent.parent / "data" / "model_with_interactions.json")
 
 # =============================================================================
-# Compute Contacts
+# Add Interactions
 # =============================================================================
 
-model.compute_contacts(tolerance=1, minimum_area=1, k=6)
+elements = list(model.elements())
+blocks = [element for element in elements if isinstance(element, BlockElement)]
+beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
+for beam in beams:
+    for block in blocks:
+        model.add_interaction(beam, block)
+        model.add_modifier(beam, block)  # beam -> cuts -> block
 
 # =============================================================================
 # Preprocess
 # =============================================================================
-
 TOL.lineardeflection = 1
 TOL.angulardeflection = 1
 
-elements = list(model.elements())
-
 columns = [element for element in elements if isinstance(element, ColumnSquareElement)]
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
 
 blocks = []
 for element in elements:
     if isinstance(element, BlockElement):
-        brep = Brep.from_mesh(element.modelgeometry)
+        mesh = element.modelgeometry
+        # blocks.append(mesh)
+
+        polygons = []
+        for face in mesh.faces():
+            points = [
+                p
+                for i, p in enumerate(mesh.face_polygon(face).points)
+                if distance_point_point(p, mesh.face_polygon(face).points[(i + 1) % len(mesh.face_polygon(face).points)]) > 1
+            ]
+            if len(points) > 2:
+                polygons.append(Polygon(points))
+
+        mesh = Mesh.from_polygons(polygons)
+
+        brep = Brep.from_mesh(mesh)
         brep.simplify(lineardeflection=TOL.lineardeflection, angulardeflection=TOL.angulardeflection)
         blocks.append(brep)
-
-contacts = []
-for edge in model.graph.edges():
-    if model.graph.edge_attribute(edge, "contacts"):
-        polygons = []
-        for contact in model.graph.edge_attribute(edge, "contacts"):
-            polygons += contact.mesh.to_polygons()
-        brep = Brep.from_polygons(polygons)
-        brep.simplify(lineardeflection=TOL.lineardeflection, angulardeflection=TOL.angulardeflection)
-        contacts.append(brep)
 
 # =============================================================================
 # Visualize
 # =============================================================================
-
 config = Config()
 config.camera.target = [0, 1000, 1250]
 config.camera.position = [0, -10000, 8125]
@@ -80,14 +92,8 @@ viewer.scene.add(
 
 viewer.scene.add(
     blocks,
-    show_faces=False,
+    show_faces=True,
     name="Blocks",
-)
-
-viewer.scene.add(
-    contacts,
-    facecolor=(0, 255, 0),
-    name="Contacts",
 )
 
 viewer.show()

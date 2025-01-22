@@ -17,8 +17,7 @@ from compas_viewer.config import Config
 # =============================================================================
 # JSON file with the geometry of the model.
 # =============================================================================
-
-rhino_geometry = compas.json_load(Path(__file__).parent / "data/frame.json")
+rhino_geometry = compas.json_load(Path(__file__).parent.parent / "data" / "frame.json")
 lines = rhino_geometry["lines"]
 
 # =============================================================================
@@ -71,7 +70,7 @@ for i in range(6, len(lines)):
 # Export
 # =============================================================================
 
-compas.json_dump(model, Path(__file__).parent / "data/model.json")
+compas.json_dump(model, Path(__file__).parent.parent / "data" / "model.json")
 
 # =============================================================================
 # Preprocess

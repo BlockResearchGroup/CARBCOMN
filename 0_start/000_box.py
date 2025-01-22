@@ -1,12 +1,10 @@
+"""
+1. Make a box.
+2. Print the box
+3. Add the box to a scene.
+4. Try to draw the scene.
+"""
+
 from compas.geometry import Box
-from compas.scene import Scene
 
-box = Box(1, 1, 1)
-
-print(box)
-print(box.to_jsonstring(pretty=True))
-
-# scene = Scene()
-# scene.add(box)
-# print(scene)
-# # scene.draw()
+box = Box(1)

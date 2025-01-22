@@ -3,7 +3,6 @@ import pathlib
 import compas
 from compas.colors import Color
 from compas.datastructures import Mesh
-from compas.geometry import Cylinder
 from compas_viewer import Viewer
 
 # ==============================================================================
@@ -20,8 +19,8 @@ sessionpath = here / "data" / "session.json"
 
 cablemesh: Mesh = compas.json_load(cablemeshpath)
 
-for vertex in cablemesh.vertices():
-    cablemesh.unset_vertex_attribute(vertex, "constraint")
+# for vertex in cablemesh.vertices():
+#     cablemesh.unset_vertex_attribute(vertex, "constraint")
 
 # ==============================================================================
 # Define and export a work session

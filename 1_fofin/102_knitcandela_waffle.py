@@ -93,9 +93,6 @@ for face in idos.faces():
 A: Brep = Brep.from_mesh(shell)
 
 waffle = A - boxes
-waffle.fix()
-waffle.sew()
-waffle.make_solid()
 
 filepath = here / "data" / "waffle.stp"
 waffle.to_step(filepath)

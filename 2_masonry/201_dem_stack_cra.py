@@ -1,38 +1,16 @@
-import math
-import random
+import pathlib
 
-from compas.geometry import Box
+import compas
 from compas_masonry.analysis import cra_penalty_solve
 from compas_masonry.elements import BlockElement
 from compas_masonry.models import BlockModel
 from compas_masonry.viewers import BlockModelViewer
 
 # =============================================================================
-# Block Geometry
+# Load model
 # =============================================================================
 
-box = Box.from_corner_corner_height([0, 0, 0], [1, 1, 0], 1)
-
-blocks: list[Box] = []
-for i in range(10):
-    block: Box = box.copy()
-    block.translate(
-        [
-            random.choice([-0.1, +0.1]) * random.random(),
-            random.choice([-0.1, +0.1]) * random.random(),
-            i * box.zsize,
-        ]
-    )
-    block.rotate(math.radians(random.choice([-5, +5])), box.frame.zaxis, box.frame.point)
-    blocks.append(block)
-
-# =============================================================================
-# Model and interactions
-# =============================================================================
-
-model = BlockModel.from_boxes(blocks)
-
-model.compute_contacts()
+model: BlockModel = compas.json_load(pathlib.Path(__file__).parent / "data/stack.json")
 
 # =============================================================================
 # Supports

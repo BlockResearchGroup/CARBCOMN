@@ -1,12 +1,11 @@
 from pathlib import Path
 
-from compas_viewer import Viewer
-from compas_viewer.config import Config
-
-from compas import json_dump
+import compas
 from compas.datastructures import Mesh
 from compas.geometry import Line
 from compas.geometry import Point
+from compas_viewer import Viewer
+from compas_viewer.config import Config
 
 # =============================================================================
 # Create Geometry
@@ -41,17 +40,19 @@ mesh = Mesh.from_vertices_and_faces(points[4:], [[0, 1, 2, 3]])
 # =============================================================================
 
 model_input = {"lines": lines, "meshes": [mesh]}
-json_dump(model_input, Path("data/frame.json"))
+
+compas.json_dump(model_input, Path(__file__).parent / "data/frame.json")
 
 # =============================================================================
 # Visualize
 # =============================================================================
 
 config = Config()
-config.camera.target = [0, 0, 100]
-config.camera.position = [10000, -10000, 10000]
+config.camera.target = [0, 1000, 1250]
+config.camera.position = [0, -10000, 8125]
 config.camera.near = 10
 config.camera.far = 100000
+config.camera.pandelta = 100
 config.renderer.gridsize = (20000, 20, 20000, 20)
 
 viewer = Viewer(config=config)

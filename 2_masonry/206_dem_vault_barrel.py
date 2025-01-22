@@ -1,3 +1,6 @@
+import pathlib
+
+import compas
 from compas.colors import Color
 from compas_masonry.models import BlockModel
 from compas_masonry.templates import BarrelVaultTemplate
@@ -16,6 +19,12 @@ template = BarrelVaultTemplate()
 model = BlockModel.from_barrelvault(template)
 
 model.compute_contacts(k=6)
+
+# =============================================================================
+# Export
+# =============================================================================
+
+compas.json_dump(model, pathlib.Path(__file__).parent / "data/barrel.json")
 
 # =============================================================================
 # Viz

@@ -1,23 +1,25 @@
+import pathlib
+
+import compas
 from compas_masonry.analysis import cra_penalty_solve
 
 # from compas_masonry.analysis import rbe_solve
+from compas_masonry.elements import BlockElement
 from compas_masonry.models import BlockModel
-from compas_masonry.templates import BarrelVaultTemplate
 from compas_masonry.viewers import BlockModelViewer
 
 # =============================================================================
-# Template
+# Load model
 # =============================================================================
 
-template = BarrelVaultTemplate()
+model: BlockModel = compas.json_load(pathlib.Path(__file__).parent / "data/barrel.json")
 
 # =============================================================================
-# Model and interactions
+# Supports
 # =============================================================================
 
-model = BlockModel.from_barrelvault(template)
-
-model.compute_contacts(k=6)
+bottom: BlockElement = sorted(model.elements(), key=lambda e: e.point.z)[0]
+bottom.is_support = True
 
 # =============================================================================
 # Equilibrium

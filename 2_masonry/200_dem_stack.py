@@ -1,9 +1,11 @@
 import math
+import pathlib
 import random
 
+import compas
 from compas.colors import Color
 from compas.geometry import Box
-from compas_masonry.models.blockmodel import BlockModel
+from compas_masonry.models import BlockModel
 from compas_viewer import Viewer
 
 # =============================================================================
@@ -32,6 +34,12 @@ for i in range(10):
 model = BlockModel.from_boxes(blocks)
 
 model.compute_contacts()
+
+# =============================================================================
+# Export
+# =============================================================================
+
+compas.json_dump(model, pathlib.Path(__file__).parent / "data/stack.json")
 
 # =============================================================================
 # Viz

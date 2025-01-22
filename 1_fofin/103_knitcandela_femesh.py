@@ -1,7 +1,6 @@
 import pathlib
 
 import compas
-from compas.datastructures import Mesh
 from compas_gmsh.models import MeshModel
 from compas_viewer import Viewer
 from compas_viewer.config import Config
@@ -18,12 +17,6 @@ sessionpath = here / "data" / "session.json"
 # ==============================================================================
 
 session = compas.json_load(sessionpath)
-
-# ==============================================================================
-# Load the cablemesh from the work session
-# ==============================================================================
-
-cablemesh = session["cablemesh"]
 
 # ==============================================================================
 # Mesh Model

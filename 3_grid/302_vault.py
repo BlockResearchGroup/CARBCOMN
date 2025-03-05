@@ -4,9 +4,9 @@ import compas
 from compas.geometry import Brep
 from compas.geometry import Translation
 from compas.tolerance import TOL
-from compas_grid.elements import BeamTProfileElement
+from compas_grid.elements import BeamProfileElement
 from compas_grid.elements import BlockElement
-from compas_grid.elements import ColumnSquareElement
+from compas_grid.elements import ColumnElement
 from compas_model.models import Model
 from compas_viewer import Viewer
 from compas_viewer.config import Config
@@ -22,13 +22,12 @@ model: Model = compas.json_load(Path(__file__).parent.parent / "data" / "model.j
 # =============================================================================
 
 barrel_model = compas.json_load(Path(__file__).parent.parent / "data" / "barrel.json")
-
 # =============================================================================
 # Add vault blocks
 # =============================================================================
-
-for block in list(barrel_model.elements()):
-    grid_block = BlockElement(shape=block.modelgeometry, is_support=block.modelgeometry.attributes["is_support"])
+for mesh in barrel_model["meshes"]:
+# for block in list(barrel_model.elements()):
+    grid_block = BlockElement(shape=mesh, is_support=mesh.attributes["is_support"])
     T = Translation.from_vector([0, 0, 3800])
     grid_block.transformation = T
     model.add_element(grid_block)
@@ -42,8 +41,8 @@ TOL.angulardeflection = 1
 
 
 elements = list(model.elements())
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
-columns = [element for element in elements if isinstance(element, ColumnSquareElement)]
+beams = [element for element in elements if isinstance(element, BeamProfileElement)]
+columns = [element for element in elements if isinstance(element, ColumnElement)]
 
 blocks = []
 for element in elements:

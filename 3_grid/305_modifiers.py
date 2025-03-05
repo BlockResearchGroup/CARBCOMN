@@ -9,9 +9,9 @@ from compas.geometry import Transformation
 from compas.geometry import Translation
 from compas.geometry import distance_point_point
 from compas.tolerance import TOL
-from compas_grid.elements import BeamTProfileElement
+from compas_grid.elements import BeamProfileElement
 from compas_grid.elements import BlockElement
-from compas_grid.elements import ColumnSquareElement
+from compas_grid.elements import ColumnElement
 from compas_model.models import Model
 from compas_viewer import Viewer
 from compas_viewer.config import Config
@@ -28,7 +28,7 @@ model: Model = compas.json_load(Path(__file__).parent.parent / "data" / "model_w
 
 elements = list(model.elements())
 blocks = [element for element in elements if isinstance(element, BlockElement)]
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
+beams = [element for element in elements if isinstance(element, BeamProfileElement)]
 for beam in beams:
     for block in blocks:
         model.add_interaction(beam, block)
@@ -40,7 +40,7 @@ for beam in beams:
 TOL.lineardeflection = 1
 TOL.angulardeflection = 1
 
-columns = [element for element in elements if isinstance(element, ColumnSquareElement)]
+columns = [element for element in elements if isinstance(element, ColumnElement)]
 
 blocks = []
 for element in elements:

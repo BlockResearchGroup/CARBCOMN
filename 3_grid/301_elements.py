@@ -7,9 +7,10 @@ from compas.geometry import Transformation
 from compas.geometry import Translation
 from compas.geometry import Vector
 from compas.tolerance import TOL
-from compas_grid.elements import BeamTProfileElement
+
+from compas_grid.elements import BeamProfileElement
 from compas_grid.elements import CableElement
-from compas_grid.elements import ColumnSquareElement
+from compas_grid.elements import ColumnElement
 from compas_model.models import Model
 from compas_viewer import Viewer
 from compas_viewer.config import Config
@@ -32,14 +33,14 @@ model = Model()
 
 # Add columns
 for i in range(0, 4):
-    column = ColumnSquareElement(300, 300, lines[i].length)
+    column = ColumnElement(300, 300, lines[i].length)
     column.transformation = Transformation.from_frame_to_frame(Frame.worldXY(), Frame(lines[i].start))
     model.add_element(column)
 
 # Add beams
 beams = []
 for i in range(4, len(lines) - 2):
-    beam = BeamTProfileElement(width=300, height=700, step_width_left=75, step_height_left=150, length=lines[i].length)
+    beam = BeamProfileElement.from_t_profile(width=300, height=700, step_width_left=75, step_height_left=150, length=lines[i].length)
     point = lines[i].start
     xaxis = Vector.Zaxis().cross(lines[i].vector)
     yaxis = Vector.Zaxis()
@@ -81,8 +82,8 @@ TOL.angulardeflection = 1
 
 elements = list(model.elements())
 
-columns = [element for element in elements if isinstance(element, ColumnSquareElement)]
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
+columns = [element for element in elements if isinstance(element, ColumnElement)]
+beams = [element for element in elements if isinstance(element, BeamProfileElement)]
 
 # =============================================================================
 # Visualize

@@ -1,10 +1,11 @@
 from pathlib import Path
 
 import compas
-from compas_grid import GridModel
-from compas_grid.elements import BeamTProfileElement
+from compas_grid.models import GridModel
+from compas_grid.elements import BeamProfileElement
 from compas_grid.elements import BlockElement
-from compas_grid.elements import ColumnSquareElement
+from compas_grid.elements import ColumnElement
+from compas.geometry import Translation
 from compas_viewer import Viewer
 from compas_viewer.config import Config
 
@@ -31,7 +32,7 @@ faces_floors = list(model.cell_network.faces_where({"is_floor": True}))  # Order
 # =============================================================================
 
 for edge in edges_columns:
-    column = ColumnSquareElement(300, 300)
+    column = ColumnElement(300, 300)
     model.add_column(column, edge)
 
 # =============================================================================
@@ -39,7 +40,8 @@ for edge in edges_columns:
 # =============================================================================
 
 for edge_index in [0, 3]:
-    beam = BeamTProfileElement(width=300, height=700, step_width_left=75, step_height_left=150)
+    beam = BeamProfileElement.from_t_profile(width=300, height=700, step_width_left=75, step_height_left=150)
+    beam.transform = Translation.from_vector([0, 0, beam.height*0.5])
     model.add_beam(beam, edges_beams[edge_index], 150)
 
 # =============================================================================
@@ -48,16 +50,18 @@ for edge_index in [0, 3]:
 
 barrel_vault = compas.json_load(Path(__file__).parent.parent / "data" / "barrel.json")
 for face in faces_floors:
-    for barrel_vault_element in list(barrel_vault.elements()):
-        block = BlockElement(shape=barrel_vault_element.shape, is_support=barrel_vault_element.is_support, transformation=barrel_vault_element.transformation)
-        model.add_floor(block, face)
+    for mesh in barrel_vault["meshes"]:
+        block = BlockElement(shape=mesh, is_support=mesh.attributes["is_support"])
+        T = Translation.from_vector([0, 0, 3800])
+        block.transformation = T
+        model.add_element(block)
 
 # =============================================================================
 # Process elements
 # =============================================================================
 elements = list(model.elements())
-columns = [element for element in elements if isinstance(element, ColumnSquareElement)]
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
+columns = [element for element in elements if isinstance(element, ColumnElement)]
+beams = [element for element in elements if isinstance(element, BeamProfileElement)]
 blocks = [element for element in elements if isinstance(element, BlockElement)]
 
 
@@ -66,7 +70,7 @@ blocks = [element for element in elements if isinstance(element, BlockElement)]
 # =============================================================================
 
 elements = list(model.elements())
-beams = [element for element in elements if isinstance(element, BeamTProfileElement)]
+beams = [element for element in elements if isinstance(element, BeamProfileElement)]
 for beam in beams:
     for block in blocks:
         model.add_interaction(beam, block)
